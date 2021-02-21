@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function(){
     })
 });
 function tic_solution(){
-    event.preventDefault();
+    //event.preventDefault();
     const id = document.querySelector('#ticketnumber').value;
     console.log(id);
     var s = document.getElementById('select-status');
@@ -32,4 +32,5 @@ function tic_solution(){
     .then(result => {
         console.log(result);
     })
+    alert('this ticket is accomplished perfectly')
 }

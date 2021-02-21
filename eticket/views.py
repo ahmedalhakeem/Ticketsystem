@@ -9,6 +9,7 @@ from django.urls import reverse
 from django.contrib.auth.models import Group
 from .models import User, Section, Department, Tickets
 from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator
 # Create your views here.
 def index(request):
 
@@ -107,6 +108,7 @@ def register_emp(request):
 def profile_emp(request, emp_id):
     user = User.objects.get(pk=emp_id)
     ticket = Tickets.objects.filter(employee=user).all()
+    ticket = ticket.order_by('-date')
     #print(ticket)
     ticketform = TicketForm()
     #user_tickets = Problems.objects.filter(pk=user)
@@ -131,7 +133,7 @@ def manager_profile(request, user_id):
 def it_profile(request, user_id):
     it_user = User.objects.get(pk=user_id)
     # Show all converted ticket to this user
-    ticket = Tickets.objects.filter(it_user=it_user)
+    ticket = Tickets.objects.filter(it_user=it_user).order_by('-date')
     #ticket = TicketForm()
     return render (request, "eticket/it_profile.html",{
         "user": it_user,
@@ -153,7 +155,11 @@ def sec_mgr_profile(request, user_id):
     tech_group = Group.objects.get(name="tech")
     it_users = User.objects.filter(groups=tech_group)
     
-    tickets = Tickets.objects.all()
+    tickets = Tickets.objects.all().order_by('-date')
+    paginator = Paginator(tickets, 10)
+    page_number = request.GET.get('page')
+    tickets  = paginator.get_page(page_number)
+    #tickets = tickets.order_by('-date').all()
     #for item in tickets:
     #    print(item.id)
     return render(request, 'eticket/sec_mgr_profile.html',{
