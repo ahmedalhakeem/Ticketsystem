@@ -5,14 +5,20 @@
 <br>
 
     <h1>مسؤول قسم الاتصالات</h1>
-
-
-    <form action="{% url 'index' %}" method="POST">
-        {% csrf_token %}
-        {{ ticket_form.as_table }}
-        <button>Send</button>
-    </form>
-
     <a href="{% url 'logout_page' %}">تسجيل خروج</a>
+    <br>
+    <button data-state="1" onclick="show_done()">accomplished tickets</button>
+    <button data-state="2" onclick="show_undone()">unaccomplished tickets</button>
 
+    <div id="ticket-container">
+        {% for item in done_tickets %}
+        <h1>{{item.title}}</h1>
+        
+        {% endfor %}
+    </div>
+
+    
+{% endblock %}
+{% block script %}
+<script src="{% static 'eticket/index4.js' %}"></script>
 {% endblock %}

@@ -1,7 +1,7 @@
 import json
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, Http404
 from django.contrib.auth.decorators import login_required 
 from .forms import *
 from django.db import IntegrityError
@@ -10,6 +10,7 @@ from django.contrib.auth.models import Group
 from .models import User, Section, Department, Tickets
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator
+from django.core import serializers
 # Create your views here.
 def index(request):
 
@@ -141,12 +142,27 @@ def it_profile(request, user_id):
         #"ticket" : ticket
     })
 # profile page for department manager
+t_list = [Tickets.objects.filter(ticket_status='accomplished'), Tickets.objects.filter(ticket_status='unaccomplished')] 
+
+def show_tickets(request, num, user_id):
+    if 1 <= num <= 2:
+        return HttpResponse(t_list[num-1])
+    else:
+        raise Http404("No such tickets")
+
 @login_required
 def dept_mgr_profile(request, user_id):
     user = User.objects.get(pk=user_id)
+    #print(t_list[0])
+    done_tickets = Tickets.objects.filter(ticket_status='accomplished')
+    #tick= serializers.serialize('json', done_tickets)
+    
+
+    #undonde_tickets = Tickets.objects.filter(ticket_status='unaccomplished').all()
     return render(request, "eticket/dept_mgr_profile.html",{
         "user": user,
-        "ticket_form": TicketForm()
+        "done_tickets" : done_tickets,
+        #"undone_tickets": t_list[1]
     })
 # profile page for section manager
 @login_required

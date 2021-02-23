@@ -16,5 +16,6 @@ urlpatterns =[
     # API routes
     path("profile_emp/<int:emp_id>/tickets", views.tickets, name="tickets"),
     path("sec_mgr_profile/<int:user_id>/convert_ticket", views.convert_ticket, name="convert_ticket"),
-    path("it_profile/<int:user_id>/submit_ticket", views.submit_ticket, name='submit_ticket')
+    path("it_profile/<int:user_id>/submit_ticket", views.submit_ticket, name='submit_ticket'),
+    path("dept_mgr_profile/<int:user_id>/show_tickets/<int:num>", views.show_tickets, name="show_tickets")
 ]
